@@ -7,9 +7,12 @@ part 'app_theme_state.g.dart';
 @HiveType(typeId: 0)
 class AppThemeState {
   @HiveField(0)
-  bool isdarkMode = true;
+  bool isdarkMode;
 
-  void toggleState() {
+  AppThemeState({this.isdarkMode = false});
+
+  bool toggleState() {
     isdarkMode = !isdarkMode;
+    return isdarkMode;
   }
 }

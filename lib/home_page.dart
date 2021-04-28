@@ -20,8 +20,9 @@ class HomePage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: InkWell(
               onTap: () {
-                appThemeState.toggleState();
-                box.put(appThemeStateKey, AppThemeState());
+                bool isDarkMode = appThemeState.toggleState();
+                box.put(
+                    appThemeStateKey, AppThemeState(isdarkMode: isDarkMode));
               },
               child: Icon(
                 Icons.track_changes_rounded,

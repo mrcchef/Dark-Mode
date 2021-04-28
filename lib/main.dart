@@ -11,12 +11,15 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 const String appState = 'appState';
 const String appThemeStateKey = 'appThemeStateKey';
+bool isIntialised = false;
 
 void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(AppThemeStateAdapter());
   Box box = await Hive.openBox(appState);
-  box.put(appThemeStateKey, AppThemeState());
+  if (box.get(appThemeStateKey) == null) {
+    box.put(appThemeStateKey, AppThemeState());
+  }
   runApp(MyApp());
 }
 
