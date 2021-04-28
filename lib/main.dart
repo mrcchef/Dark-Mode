@@ -5,28 +5,35 @@ import 'package:provider/provider.dart';
 
 import 'home_page.dart';
 
-void main() {
+import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+const String appState = 'appState';
+const String appThemeStateKey = 'appThemeStateKey';
+
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(AppThemeStateAdapter());
+  Box box = await Hive.openBox(appState);
+  box.put(appThemeStateKey, AppThemeState());
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<AppThemeState>(
-      create: (context) => AppThemeState(),
-      builder: (context, _) {
-        return Consumer<AppThemeState>(
-          builder: (context, appThemeState, _) {
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Flutter Demo',
-              theme: appThemeState.isdarkMode
-                  ? AppTheme.darkTheme
-                  : AppTheme.lightTheme,
-              home: HomePage(),
-            );
-          },
+    return ValueListenableBuilder(
+      valueListenable: Hive.box(appState).listenable(),
+      builder: (context, box, child) {
+        AppThemeState appThemeState = box.get(appThemeStateKey);
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',
+          theme: appThemeState.isdarkMode
+              ? AppTheme.darkTheme
+              : AppTheme.lightTheme,
+          home: HomePage(),
         );
       },
     );

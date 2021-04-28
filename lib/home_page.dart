@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_theming/app_theme_state.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
+
+const String appState = 'appState';
+const String appThemeStateKey = 'appThemeStateKey';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Box box = Hive.box(appState);
+    final AppThemeState appThemeState = box.get(appThemeStateKey);
+
     return Scaffold(
       appBar: AppBar(
         leading: Icon(Icons.menu),
@@ -13,8 +20,8 @@ class HomePage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: InkWell(
               onTap: () {
-                Provider.of<AppThemeState>(context, listen: false)
-                    .toggleState();
+                appThemeState.toggleState();
+                box.put(appThemeStateKey, AppThemeState());
               },
               child: Icon(
                 Icons.track_changes_rounded,
